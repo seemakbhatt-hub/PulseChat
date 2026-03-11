@@ -66,7 +66,7 @@ function App() {
   if (!user) {
     return (
       <div className="login">
-        <h1>ShadowTalk</h1>
+        <h1>PulseChat</h1>
         <button onClick={login}>Enter Secure Chat</button>
       </div>
     );
@@ -75,7 +75,7 @@ function App() {
   return (
     <div className="chat">
       <div className="header">
-        <h2>ShadowTalk</h2>
+        <h2>PulseChat by Shankari</h2>
         <button onClick={logout}>Logout</button>
       </div>
 
