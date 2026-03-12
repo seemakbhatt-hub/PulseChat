@@ -91,7 +91,7 @@ function App() {
         ))}
       </div>
 
-      <div className="inputArea">
+      <div className="input-area">
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}
