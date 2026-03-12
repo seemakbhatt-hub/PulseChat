@@ -20,14 +20,13 @@ import {
 } from "firebase/firestore";
 
 function App() {
-
   const [user, setUser] = useState(null);
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
 
   const messagesRef = collection(db, "messages");
 
-  // Track login
+  // Track login state
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
@@ -36,7 +35,7 @@ function App() {
     return () => unsubscribe();
   }, []);
 
-  // Listen to messages
+  // Listen to messages in real time
   useEffect(() => {
     const q = query(messagesRef, orderBy("createdAt"));
 
@@ -52,7 +51,7 @@ function App() {
     return () => unsubscribe();
   }, []);
 
-  // Google login
+  // Google Sign In
   const signIn = async () => {
     await signInWithPopup(auth, provider);
   };
@@ -84,22 +83,7 @@ function App() {
     await Promise.all(deletions);
   };
 
-  // Detect page reload
-  useEffect(() => {
-
-    const handleReload = () => {
-      deleteAllMessages();
-    };
-
-    window.onbeforeunload = handleReload;
-
-    return () => {
-      window.onbeforeunload = null;
-    };
-
-  }, []);
-
-  // Logout
+  // Logout + delete chat
   const logout = async () => {
     await deleteAllMessages();
     await signOut(auth);
@@ -109,14 +93,11 @@ function App() {
     <div className="App">
 
       {!user ? (
-
         <div className="login">
-          <h2>ShadowTalk</h2>
+          <h2>ShadowTalk Secure Chat</h2>
           <button onClick={signIn}>Enter Secure Chat</button>
         </div>
-
       ) : (
-
         <div className="chat">
 
           <div className="header">
@@ -130,7 +111,7 @@ function App() {
                 key={msg.id}
                 className={msg.uid === user.uid ? "sent" : "received"}
               >
-                <img src={msg.photoURL} width="30" />
+                <img src={msg.photoURL} alt="user" />
                 <p>{msg.text}</p>
               </div>
             ))}
@@ -142,16 +123,11 @@ function App() {
               onChange={(e) => setMessage(e.target.value)}
               placeholder="Type message..."
             />
-
-            <button type="submit">
-              Send
-            </button>
+            <button type="submit">Send</button>
           </form>
 
         </div>
-
       )}
-
     </div>
   );
 }
