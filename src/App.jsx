@@ -1,133 +1,104 @@
-import { useState, useEffect } from "react";
-import { auth, db, provider } from "./firebase";
-
-import {
-  signInWithPopup,
-  signOut,
-  onAuthStateChanged
-} from "firebase/auth";
-
-import {
-  collection,
-  addDoc,
-  serverTimestamp,
-  query,
-  orderBy,
-  onSnapshot,
-  getDocs,
-  deleteDoc,
-  doc
-} from "firebase/firestore";
+import { useEffect, useState } from "react";
+import { auth, provider, db } from "./firebase";
+import { signInWithPopup, signOut } from "firebase/auth";
+import { collection, addDoc, onSnapshot, query, orderBy } from "firebase/firestore";
+import { encryptMessage, decryptMessage } from "./crypto";
 
 function App() {
   const [user, setUser] = useState(null);
-  const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
+  const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(true);
 
-  const messagesRef = collection(db, "messages");
-
-  // Track login state
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
+    const unsubscribe = auth.onAuthStateChanged((u) => {
+      setUser(u);
+      setLoading(false);
     });
-
     return () => unsubscribe();
   }, []);
 
-  // Listen to messages in real time
   useEffect(() => {
-    const q = query(messagesRef, orderBy("createdAt"));
-
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      setMessages(
-        snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data()
-        }))
-      );
+    const q = query(collection(db, "messages"), orderBy("createdAt"));
+    const unsubscribe = onSnapshot(q, async (snapshot) => {
+      const msgs = [];
+      for (let doc of snapshot.docs) {
+        const data = doc.data();
+        const decrypted = await decryptMessage(data.text, data.iv);
+        msgs.push({ ...data, text: decrypted });
+      }
+      setMessages(msgs);
     });
-
     return () => unsubscribe();
   }, []);
 
-  // Google Sign In
-  const signIn = async () => {
+  const sendMessage = async () => {
+    if (!input.trim()) return;
+
+    const encrypted = await encryptMessage(input);
+
+    await addDoc(collection(db, "messages"), {
+      text: encrypted.encrypted,
+      iv: encrypted.iv,
+      sender: user.displayName,
+      createdAt: new Date()
+    });
+
+    setInput("");
+  };
+
+  const login = async () => {
     await signInWithPopup(auth, provider);
   };
 
-  // Send message
-  const sendMessage = async (e) => {
-    e.preventDefault();
-
-    if (message.trim() === "") return;
-
-    await addDoc(messagesRef, {
-      text: message,
-      createdAt: serverTimestamp(),
-      uid: user.uid,
-      photoURL: user.photoURL
-    });
-
-    setMessage("");
-  };
-
-  // Delete all messages
-  const deleteAllMessages = async () => {
-    const snapshot = await getDocs(messagesRef);
-
-    const deletions = snapshot.docs.map((msg) =>
-      deleteDoc(doc(db, "messages", msg.id))
-    );
-
-    await Promise.all(deletions);
-  };
-
-  // Logout + delete chat
   const logout = async () => {
-    await deleteAllMessages();
     await signOut(auth);
   };
 
+  if (loading) {
+    return (
+      <div className="loading">
+        <h1>Initializing Secure Channel...</h1>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="login">
+        <h1>ShadowTalk</h1>
+        <button onClick={login}>Enter Secure Chat</button>
+      </div>
+    );
+  }
+
   return (
-    <div className="App">
+    <div className="chat">
+      <div className="header">
+        <h2>ShadowTalk</h2>
+        <button onClick={logout}>Logout</button>
+      </div>
 
-      {!user ? (
-        <div className="login">
-          <h2>ShadowTalk Secure Chat</h2>
-          <button onClick={signIn}>Enter Secure Chat</button>
-        </div>
-      ) : (
-        <div className="chat">
-
-          <div className="header">
-            <h3>ShadowTalk</h3>
-            <button onClick={logout}>Logout</button>
+      <div className="messages">
+        {messages.map((msg, i) => (
+          <div
+            key={i}
+            className={msg.sender === user.displayName ? "myMsg" : "otherMsg"}
+          >
+            <strong>{msg.sender}</strong>
+            <p>{msg.text}</p>
           </div>
+        ))}
+      </div>
 
-          <div className="messages">
-            {messages.map((msg) => (
-              <div
-                key={msg.id}
-                className={msg.uid === user.uid ? "sent" : "received"}
-              >
-                <img src={msg.photoURL} alt="user" />
-                <p>{msg.text}</p>
-              </div>
-            ))}
-          </div>
-
-          <form onSubmit={sendMessage} className="input-area">
-            <input
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              placeholder="Type message..."
-            />
-            <button type="submit">Send</button>
-          </form>
-
-        </div>
-      )}
+      <div className="inputArea">
+        <input
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="Type encrypted message..."
+        />
+        <button onClick={sendMessage}>Send</button>
+      </div>
     </div>
   );
 }
