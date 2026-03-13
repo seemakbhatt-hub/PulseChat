@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { auth, provider, db } from "./firebase";
 import { signInWithPopup, signOut } from "firebase/auth";
-import { collection, addDoc, onSnapshot, query, orderBy, where } from "firebase/firestore";
+import { collection, addDoc, onSnapshot, query, orderBy, where, deleteDoc, doc } from "firebase/firestore";
 import { encryptMessage, decryptMessage } from "./crypto";
 import "./App.css";
 
@@ -13,6 +13,7 @@ const [loginTime, setLoginTime] = useState(null);
 const [input, setInput] = useState("");
 const [loading, setLoading] = useState(true);
 const [typingUser, setTypingUser] = useState("");
+const [onlineUsers, setOnlineUsers] = useState([]);
 
 const messagesEndRef = useRef(null);
 
@@ -22,11 +23,17 @@ messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
 };
 
 useEffect(() => {
-  const unsubscribe = auth.onAuthStateChanged((u) => {
+  const unsubscribe = auth.onAuthStateChanged(async (u) => {
     setUser(u);
 
     if (u) {
+
       setLoginTime(new Date());
+
+      await addDoc(collection(db, "onlineUsers"), {
+        name: u.displayName
+      });
+
     }
 
     setLoading(false);
@@ -100,6 +107,23 @@ useEffect(() => {
 
 }, [user]);
 
+useEffect(() => {
+
+  const q = query(collection(db, "onlineUsers"));
+
+  const unsubscribe = onSnapshot(q, (snapshot) => {
+
+    const users = snapshot.docs.map(doc => doc.data().name);
+    setOnlineUsers(users);
+
+  });
+
+  return () => unsubscribe();
+
+}, []);
+
+const sendMessage = async () => {
+
 const sendMessage = async () => {
 
 if (!input.trim()) return;
@@ -143,11 +167,15 @@ return ( <div className="login"> <h1>ShadowTalk</h1> <button onClick={login}>Ent
 
 return ( <div className="chat-container">
 
-  <div className="header">
-    ShadowTalk By Shankari
-    <button onClick={logout}>Logout</button>
-  </div>
+<div className="header">
+  ShadowTalk By Shankari
+  <button onClick={logout}>Logout</button>
+</div>
 
+<div className="online-users">
+  Online: {onlineUsers.join(", ")}
+</div>
+  
   <div className="messages">
 
     {messages.map((msg, i) => (
