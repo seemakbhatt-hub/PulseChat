@@ -12,6 +12,7 @@ const [messages, setMessages] = useState([]);
 const [loginTime, setLoginTime] = useState(null);
 const [input, setInput] = useState("");
 const [loading, setLoading] = useState(true);
+const [typingUser, setTypingUser] = useState("");
 
 const messagesEndRef = useRef(null);
 
@@ -67,6 +68,37 @@ useEffect(() => {
   return () => unsubscribe();
 
 }, [loginTime]);
+useEffect(() => {
+
+  const q = query(collection(db, "typing"), orderBy("time"));
+
+  const unsubscribe = onSnapshot(q, (snapshot) => {
+
+    snapshot.docChanges().forEach((change) => {
+
+      if (change.type === "added") {
+
+        const name = change.doc.data().name;
+
+        if (name !== user?.displayName) {
+
+          setTypingUser(name);
+
+          setTimeout(() => {
+            setTypingUser("");
+          }, 2000);
+
+        }
+
+      }
+
+    });
+
+  });
+
+  return () => unsubscribe();
+
+}, [user]);
 
 const sendMessage = async () => {
 
@@ -138,15 +170,26 @@ return ( <div className="chat-container">
 
   </div>
 
+  {typingUser && (
+  <div className="typing-indicator">
+    {typingUser} is typing...
+  </div>
+)}
   <div className="input-area">
 
-    <input
-      value={input}
-      onChange={(e) => setInput(e.target.value)}
-      onKeyDown={handleKeyPress}
-      placeholder="Type encrypted message..."
-    />
+   <input
+  value={input}
+  onChange={(e) => {
+    setInput(e.target.value);
 
+    addDoc(collection(db, "typing"), {
+      name: user.displayName,
+      time: new Date()
+    });
+  }}
+  onKeyDown={handleKeyPress}
+  placeholder="Type encrypted message..."
+/>
     <button onClick={sendMessage}>Send</button>
 
   </div>
