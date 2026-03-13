@@ -124,8 +124,6 @@ useEffect(() => {
 
 const sendMessage = async () => {
 
-const sendMessage = async () => {
-
 if (!input.trim()) return;
 
 const encrypted = await encryptMessage(input);
