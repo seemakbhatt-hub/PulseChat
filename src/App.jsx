@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { auth, provider, db } from "./firebase";
 import { signInWithPopup, signOut } from "firebase/auth";
-import { collection, addDoc, onSnapshot, query, orderBy } from "firebase/firestore";
+import { collection, addDoc, onSnapshot, query, orderBy, where } from "firebase/firestore";
 import { encryptMessage, decryptMessage } from "./crypto";
 import "./App.css";
 
@@ -9,6 +9,7 @@ function App() {
 
 const [user, setUser] = useState(null);
 const [messages, setMessages] = useState([]);
+const [loginTime, setLoginTime] = useState(null);
 const [input, setInput] = useState("");
 const [loading, setLoading] = useState(true);
 
@@ -20,44 +21,52 @@ messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
 };
 
 useEffect(() => {
-const unsubscribe = auth.onAuthStateChanged((u) => {
-setUser(u);
-setLoading(false);
-});
+  const unsubscribe = auth.onAuthStateChanged((u) => {
+    setUser(u);
 
-return () => unsubscribe();
+    if (u) {
+      setLoginTime(new Date());
+    }
 
+    setLoading(false);
+  });
+
+  return () => unsubscribe();
 }, []);
-
 useEffect(() => {
 
-const q = query(collection(db, "messages"), orderBy("createdAt"));
+  if (!loginTime) return;
 
-const unsubscribe = onSnapshot(q, async (snapshot) => {
+  const q = query(
+    collection(db, "messages"),
+    where("createdAt", ">", loginTime),
+    orderBy("createdAt")
+  );
 
-  const msgs = [];
+  const unsubscribe = onSnapshot(q, async (snapshot) => {
 
-  for (let doc of snapshot.docs) {
+    const msgs = [];
 
-    const data = doc.data();
+    for (let doc of snapshot.docs) {
 
-    const decrypted = await decryptMessage(data.text, data.iv);
+      const data = doc.data();
+      const decrypted = await decryptMessage(data.text, data.iv);
 
-    msgs.push({
-      ...data,
-      text: decrypted
-    });
+      msgs.push({
+        ...data,
+        text: decrypted
+      });
 
-  }
+    }
 
-  setMessages(msgs);
-  setTimeout(scrollToBottom, 100);
+    setMessages(msgs);
+    setTimeout(scrollToBottom, 100);
 
-});
+  });
 
-return () => unsubscribe();
+  return () => unsubscribe();
 
-}, []);
+}, [loginTime]);
 
 const sendMessage = async () => {
 
