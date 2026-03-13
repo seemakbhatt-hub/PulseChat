@@ -118,3 +118,9 @@ font-size:12px;
 margin-left:6px;
 opacity:0.7;
 }
+.typing-indicator{
+  font-size:14px;
+  color:gray;
+  margin-left:10px;
+  margin-bottom:5px;
+}
