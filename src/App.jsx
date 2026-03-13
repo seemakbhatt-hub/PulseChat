@@ -25,9 +25,7 @@ setUser(u);
 setLoading(false);
 });
 
-```
 return () => unsubscribe();
-```
 
 }, []);
 
