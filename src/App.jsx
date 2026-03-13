@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { auth, provider, db } from "./firebase";
 import { signInWithPopup, signOut } from "firebase/auth";
-import { collection, addDoc, onSnapshot, query, orderBy, where, deleteDoc, doc, getdocs } from "firebase/firestore";
+import { collection, setDoc, onSnapshot, query, orderBy, where, deleteDoc, doc } from "firebase/firestore";
 import { encryptMessage, decryptMessage } from "./crypto";
 import "./App.css";
 
@@ -30,22 +30,11 @@ useEffect(() => {
 
       setLoginTime(new Date());
 
-   const q = query(
-  collection(db, "onlineUsers"),
-  where("name", "==", u.displayName)
-);
-
-const snapshot = await getDocs(q);
-
-snapshot.forEach(async (docItem) => {
-  await deleteDoc(doc(db, "onlineUsers", docItem.id));
-});
-
-const docRef = await addDoc(collection(db, "onlineUsers"), {
+await setDoc(doc(db, "onlineUsers", u.uid), {
   name: u.displayName
 });
 
-window.userDocId = docRef.id;
+window.userDocId = u.uid;
       
     }
 
@@ -163,9 +152,14 @@ await signInWithPopup(auth, provider);
 };
 
 const logout = async () => {
-await signOut(auth);
-};
 
+  if (window.userDocId) {
+    await deleteDoc(doc(db, "onlineUsers", window.userDocId));
+  }
+
+  await signOut(auth);
+
+};
 if (loading) {
 return ( <div className="loading"> <h1>Initializing Secure Channel...</h1> </div>
 );
