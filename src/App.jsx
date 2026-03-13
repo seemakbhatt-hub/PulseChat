@@ -97,7 +97,7 @@ function App() {
           onChange={(e) => setInput(e.target.value)}
           placeholder="Type encrypted message..."
         />
-        <button onClick={sendMessage}>Send</button>
+        <button type="button" onClick={sendMessage}>Send</button>
       </div>
     </div>
   );
