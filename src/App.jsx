@@ -30,10 +30,12 @@ useEffect(() => {
 
       setLoginTime(new Date());
 
-      await addDoc(collection(db, "onlineUsers"), {
-        name: u.displayName
-      });
+     const docRef = await addDoc(collection(db, "onlineUsers"), {
+  name: u.displayName
+});
 
+window.userDocId = docRef.id;
+      
     }
 
     setLoading(false);
