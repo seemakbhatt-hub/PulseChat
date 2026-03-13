@@ -31,7 +31,6 @@ return () => unsubscribe();
 
 useEffect(() => {
 
-```
 const q = query(collection(db, "messages"), orderBy("createdAt"));
 
 const unsubscribe = onSnapshot(q, async (snapshot) => {
@@ -57,13 +56,11 @@ const unsubscribe = onSnapshot(q, async (snapshot) => {
 });
 
 return () => unsubscribe();
-```
 
 }, []);
 
 const sendMessage = async () => {
 
-```
 if (!input.trim()) return;
 
 const encrypted = await encryptMessage(input);
@@ -76,7 +73,6 @@ await addDoc(collection(db, "messages"), {
 });
 
 setInput("");
-```
 
 };
 
@@ -106,7 +102,6 @@ return ( <div className="login"> <h1>ShadowTalk</h1> <button onClick={login}>Ent
 
 return ( <div className="chat-container">
 
-```
   <div className="header">
     ShadowTalk 🔐
     <button onClick={logout}>Logout</button>
@@ -148,7 +143,6 @@ return ( <div className="chat-container">
   </div>
 
 </div>
-```
 
 );
 }
