@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { auth, provider, db } from "./firebase";
 import { signInWithPopup, signOut } from "firebase/auth";
-import { collection, addDoc, onSnapshot, query, orderBy, where, deleteDoc, doc } from "firebase/firestore";
+import { collection, addDoc, onSnapshot, query, orderBy, where, deleteDoc, doc, getdocs } from "firebase/firestore";
 import { encryptMessage, decryptMessage } from "./crypto";
 import "./App.css";
 
@@ -30,7 +30,18 @@ useEffect(() => {
 
       setLoginTime(new Date());
 
-     const docRef = await addDoc(collection(db, "onlineUsers"), {
+   const q = query(
+  collection(db, "onlineUsers"),
+  where("name", "==", u.displayName)
+);
+
+const snapshot = await getDocs(q);
+
+snapshot.forEach(async (docItem) => {
+  await deleteDoc(doc(db, "onlineUsers", docItem.id));
+});
+
+const docRef = await addDoc(collection(db, "onlineUsers"), {
   name: u.displayName
 });
 
