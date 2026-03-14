@@ -266,7 +266,7 @@ Logout
 });
   }}
   onKeyDown={handleKeyPress}
-  placeholder="The Floor Is Yours..."
+  placeholder="The Floor is Yours to Type..."
 />
 
 <button className="gradient-btn" 
