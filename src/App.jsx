@@ -130,13 +130,12 @@ if (!input.trim()) return;
 
 const encrypted = await encryptMessage(input);
 
-await addDoc(collection(db, "messages"), {
+await setDoc(doc(collection(db, "messages")), {
   text: encrypted.encrypted,
   iv: encrypted.iv,
   sender: user.displayName,
   createdAt: new Date()
 });
-
 setInput("");
 
 };
@@ -230,10 +229,10 @@ return ( <div className="chat-container">
   onChange={(e) => {
     setInput(e.target.value);
 
-    addDoc(collection(db, "typing"), {
-      name: user.displayName,
-      time: new Date()
-    });
+    setDoc(doc(db, "typing", user.uid), {
+  name: user.displayName,
+  time: new Date()
+});
   }}
   onKeyDown={handleKeyPress}
   placeholder="Type encrypted message..."
