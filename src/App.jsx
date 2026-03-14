@@ -57,17 +57,26 @@ useEffect(() => {
 
     const msgs = [];
 
-    for (let messageDoc of snapshot.docs) {
+   for (let messageDoc of snapshot.docs) {
 
   const data = messageDoc.data();
-      const decrypted = await decryptMessage(data.text, data.iv);
 
-      msgs.push({
-        ...data,
-        text: decrypted
-      });
+  // mark message as seen if it's not mine
+if (user && data.uid !== user.uid && !data.seen)
+    await setDoc(doc(db, "messages", messageDoc.id), {
+      ...data,
+      seen: true
+    });
+  }
 
-    }
+  const decrypted = await decryptMessage(data.text, data.iv);
+
+  msgs.push({
+    ...data,
+    text: decrypted
+  });
+
+}
 
     setMessages(msgs);
     setTimeout(scrollToBottom, 100);
@@ -135,7 +144,8 @@ await setDoc(doc(collection(db, "messages")), {
   iv: encrypted.iv,
   name: user.displayName,
   uid: user.uid,
-  createdAt: new Date()
+  createdAt: new Date(),
+  seen: false
 });
 setInput("");
 
