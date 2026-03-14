@@ -171,12 +171,11 @@ return ( <div className="login"> <h1>ShadowTalk</h1> <button onClick={login}>Ent
 }
 
 return ( <div className="chat-container">
-
 <div className="header">
-  PulseChat by Shankzz
+  <span className="gradient-title">PulseChat By Shankzz</span>
   <button onClick={logout}>Logout</button>
 </div>
-
+  
 <div className="online-users">
   Online: {onlineUsers.join(", ")}
 </div>
