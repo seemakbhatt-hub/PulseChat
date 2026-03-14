@@ -183,16 +183,25 @@ return ( <div className="chat-container">
   
   <div className="messages">
 
-    {messages.map((msg, index) => {
+   {messages.map((msg, index) => {
 
   const isMine = msg.uid === user.uid;
 
-  return (
-    <div key={index} className={`message-wrapper ${isMine ? "sent" : "received"}`}>
+  const previousMessage = messages[index - 1];
 
-      <div className="message-name">
-        {msg.name}
-      </div>
+  const showName = !previousMessage || previousMessage.uid !== msg.uid;
+
+  return (
+    <div
+      key={index}
+      className={`message-wrapper ${isMine ? "sent" : "received"}`}
+    >
+
+      {showName && (
+        <div className="message-name">
+          {msg.name}
+        </div>
+      )}
 
       <div className={`message ${isMine ? "sent" : "received"}`}>
         {decryptMessage(msg.text)}
