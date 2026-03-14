@@ -266,7 +266,7 @@ Logout
 });
   }}
   onKeyDown={handleKeyPress}
-  placeholder="Type encrypted message..."
+  placeholder="The Floor Is Yours..."
 />
 
 <button className="gradient-btn" 
