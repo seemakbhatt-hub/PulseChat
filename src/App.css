@@ -1,10 +1,35 @@
 /* GLOBAL STYLES */
-
 body{
 margin:0;
-background:#000;
+
+background:linear-gradient(
+180deg,
+#050505,
+#0b0b0f,
+#050505
+);
+
 font-family: monospace;
 color:white;
+}
+body::before{
+content:"";
+position:fixed;
+
+top:50%;
+left:50%;
+
+width:900px;
+height:900px;
+
+background:radial-gradient(
+circle,
+rgba(120,90,255,0.12),
+transparent 70%
+);
+
+transform:translate(-50%,-50%);
+z-index:-1;
 }
 
 /* MAIN CHAT CONTAINER */
@@ -13,12 +38,16 @@ color:white;
 display:flex;
 flex-direction:column;
 height:100vh;
+
+background:rgba(0,0,0,0.55);
+backdrop-filter:blur(12px);
 }
 
 /* HEADER */
 
 .header{
-background:#000;
+background:rgba(0,0,0,0.6);
+backdrop-filter:blur(8px);
 color:white;
 font-size:26px;
 padding:20px;
@@ -420,4 +449,33 @@ transition:transform 0.2s ease, box-shadow 0.2s ease;
 .logout-btn:hover{
 transform:translateY(-2px);
 box-shadow:0 6px 18px rgba(255,65,108,0.4);
+}
+body::after{
+content:"";
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+
+background-image:
+radial-gradient(rgba(255,255,255,0.15) 1px, transparent 1px);
+
+background-size:40px 40px;
+
+animation:particlesMove 60s linear infinite;
+
+z-index:-2;
+}
+
+@keyframes particlesMove{
+
+0%{
+transform:translateY(0);
+}
+
+100%{
+transform:translateY(-200px);
+}
+
 }
