@@ -57,9 +57,9 @@ useEffect(() => {
 
     const msgs = [];
 
-    for (let doc of snapshot.docs) {
+    for (let messageDoc of snapshot.docs) {
 
-      const data = doc.data();
+  const data = messageDoc.data();
       const decrypted = await decryptMessage(data.text, data.iv);
 
       msgs.push({
@@ -193,25 +193,32 @@ return ( <div className="chat-container">
   const newGroup = !previousMessage || previousMessage.uid !== msg.uid;
 
   return (
-    <div
-      key={index}
-      className={`message-wrapper ${isMine ? "sent" : "received"} ${newGroup ? "new-group" : ""}`}
-    >
+<div
+  key={index}
+  className={`message-row ${isMine ? "sent" : "received"} ${newGroup ? "new-group" : ""}`}
+>
 
-      {showName && (
-       <div className="message-name">
-  <span className="avatar">
-    {msg.name.charAt(0)}
-  </span>
-  {msg.name}
-</div>
-      )}
-
-     <div className={`message ${isMine ? "sent" : "received"}`}>
-  {msg.text}
-</div>
-
+  {!isMine && showName && (
+    <div className="avatar">
+      {msg.name?.charAt(0)}
     </div>
+  )}
+
+  <div className="message-content">
+
+    {showName && (
+      <div className="message-name">
+        {msg.name}
+      </div>
+    )}
+
+    <div className={`message ${isMine ? "sent" : "received"}`}>
+      {msg.text}
+    </div>
+
+  </div>
+
+</div>
   );
 
 })}
