@@ -31,7 +31,7 @@ align-items:center;
 .gradient-title{
 background:linear-gradient(90deg,#00f2fe,#8e2de2,#6a5af9);
 background-size:300% 300%;   /* change from 200% */
-animation:titleFlow 8s ease infinite;
+animation:titleFlow 12s ease infinite;
 
 -webkit-background-clip:text;
 -webkit-text-fill-color:transparent;
