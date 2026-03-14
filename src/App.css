@@ -203,6 +203,13 @@ display:flex;
 align-items:flex-start;
 gap:8px;
 }
+.message-row.sent{
+justify-content:flex-end;
+}
+
+.message-row.received{
+justify-content:flex-start;
+}
 
 /* MESSAGE CONTENT */
 
