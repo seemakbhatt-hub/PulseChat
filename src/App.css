@@ -283,3 +283,51 @@ transform:translateY(0);
 100%{ background-position:0% 50%; }
 
 }
+/* GRADIENT BUTTON STYLE */
+
+.gradient-btn{
+padding:8px 16px;
+border:none;
+border-radius:8px;
+color:white;
+font-weight:600;
+cursor:pointer;
+
+/* gradient colors */
+background:linear-gradient(
+90deg,
+#00c9a7,
+#5b86e5,
+#b26bff
+);
+
+background-size:200% 200%;
+animation:buttonGradientShift 6s ease infinite;
+
+transition:transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* hover effect */
+
+.gradient-btn:hover{
+transform:translateY(-2px);
+box-shadow:0 6px 18px rgba(0,0,0,0.35);
+}
+
+/* gradient movement */
+
+@keyframes buttonGradientShift{
+
+0%{
+background-position:0% 50%;
+}
+
+50%{
+background-position:100% 50%;
+}
+
+100%{
+background-position:0% 50%;
+}
+
+}
