@@ -63,8 +63,35 @@ animation: messageFade 0.25s ease;
 box-shadow:
 0 2px 8px rgba(0,0,0,0.3),
 0 4px 12px rgba(120,90,255,0.25);
+
 transition:all 0.2s ease;
 }
+
+/* MESSAGE + TIMESTAMP CONTAINER */
+
+.message-bubble{
+display:flex;
+flex-direction:column;
+position:relative;
+}
+
+/* HIDDEN TIME */
+
+.timestamp{
+font-size:11px;
+color:#777;
+margin-top:2px;
+opacity:0;
+transition:opacity 0.2s ease;
+pointer-events:none;
+}
+
+/* SHOW TIME ON HOVER */
+
+.message-bubble:hover .timestamp{
+opacity:1;
+}
+
 .message:hover{
 transform:translateY(-2px);
 box-shadow:
