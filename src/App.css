@@ -149,3 +149,10 @@ color:#888;
 margin-bottom:4px;
 margin-left:4px;
 }
+.message-wrapper{
+margin-top:4px;
+}
+
+.message-wrapper.new-group{
+margin-top:12px;
+}
