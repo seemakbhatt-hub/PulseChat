@@ -173,7 +173,7 @@ return ( <div className="login"> <h1>ShadowTalk</h1> <button onClick={login}>Ent
 return ( <div className="chat-container">
 
 <div className="header">
-  ShadowTalk By Shankari
+  PulseChat by Shankzz
   <button onClick={logout}>Logout</button>
 </div>
 
