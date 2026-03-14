@@ -18,11 +18,17 @@ height:100vh;
 /* HEADER */
 
 .header{
-color:#00ff9d;
+background:linear-gradient(90deg,#00f2fe,#8e2de2,#6a5af9);
+background-size:200% 200%;
+animation: headerFlow 8s ease infinite;
+
+color:white;
 font-size:26px;
 padding:20px;
-border-bottom:1px solid #00ff9d;
 letter-spacing:2px;
+border-bottom:none;
+
+box-shadow:0 2px 12px rgba(120,90,255,0.35);
 }
 
 /* MESSAGE AREA */
@@ -171,6 +177,21 @@ transform:translateY(8px);
 100%{
 opacity:1;
 transform:translateY(0);
+}
+
+}
+@keyframes headerFlow{
+
+0%{
+background-position:0% 50%;
+}
+
+50%{
+background-position:100% 50%;
+}
+
+100%{
+background-position:0% 50%;
 }
 
 }
