@@ -133,7 +133,8 @@ const encrypted = await encryptMessage(input);
 await setDoc(doc(collection(db, "messages")), {
   text: encrypted.encrypted,
   iv: encrypted.iv,
-  sender: user.displayName,
+  name: user.displayName,
+  uid: user.uid,
   createdAt: new Date()
 });
 setInput("");
@@ -204,9 +205,9 @@ return ( <div className="chat-container">
         </div>
       )}
 
-      <div className={`message ${isMine ? "sent" : "received"}`}>
-        {decryptMessage(msg.text)}
-      </div>
+     <div className={`message ${isMine ? "sent" : "received"}`}>
+  {msg.text}
+</div>
 
     </div>
   );
