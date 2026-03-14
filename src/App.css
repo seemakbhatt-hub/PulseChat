@@ -18,23 +18,23 @@ height:100vh;
 /* HEADER */
 
 .header{
-background:linear-gradient(90deg,#00f2fe,#8e2de2,#6a5af9);
-background-size:200% 200%;
-animation: headerFlow 12s ease infinite;
-
+background:#000;
 color:white;
 font-size:26px;
 padding:20px;
 letter-spacing:2px;
-
-backdrop-filter:blur(10px);
--webkit-backdrop-filter:blur(10px);
-
-background-color:rgba(255,255,255,0.05);
-
-box-shadow:0 2px 12px rgba(120,90,255,0.35);
-
 border-bottom:1px solid rgba(255,255,255,0.08);
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+.gradient-title{
+background:linear-gradient(90deg,#00f2fe,#8e2de2,#6a5af9);
+background-size:300% 300%;   /* change from 200% */
+animation:titleFlow 12s ease infinite;
+
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
 }
 
 /* MESSAGE AREA */
@@ -46,6 +46,7 @@ padding:20px;
 display:flex;
 flex-direction:column;
 gap:12px;
+scroll-behavior:smooth;
 }
 
 /* MESSAGE BUBBLES */
@@ -150,6 +151,7 @@ opacity:0.7;
 display:flex;
 flex-direction:column;
 max-width:60%;
+margin-top:4px;
 }
 
 .message-wrapper.sent{
@@ -165,9 +167,6 @@ font-size:12px;
 color:#888;
 margin-bottom:4px;
 margin-left:4px;
-}
-.message-wrapper{
-margin-top:4px;
 }
 
 .message-wrapper.new-group{
@@ -186,18 +185,13 @@ transform:translateY(0);
 }
 
 }
-@keyframes headerFlow{
 
-0%{
-background-position:0% 50%;
-}
+@keyframes titleFlow{
 
-50%{
-background-position:100% 50%;
-}
+0%{ background-position:0% 50%; }
 
-100%{
-background-position:0% 50%;
-}
+50%{ background-position:100% 50%; }
+
+100%{ background-position:0% 50%; }
 
 }
