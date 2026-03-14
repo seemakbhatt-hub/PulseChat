@@ -52,37 +52,34 @@ useEffect(() => {
     where("createdAt", ">", loginTime),
     orderBy("createdAt")
   );
+const unsubscribe = onSnapshot(q, async (snapshot) => {
 
-  const unsubscribe = onSnapshot(q, async (snapshot) => {
+  const msgs = [];
 
-    const msgs = [];
+  for (let messageDoc of snapshot.docs) {
 
-   for (let messageDoc of snapshot.docs) {
+    const data = messageDoc.data();
 
-  const data = messageDoc.data();
+    if (user && data.uid !== user.uid && !data.seen) {
+      await setDoc(doc(db, "messages", messageDoc.id), {
+        ...data,
+        seen: true
+      });
+    }
 
-  // mark message as seen if it's not mine
-if (user && data.uid !== user.uid && !data.seen)
-    await setDoc(doc(db, "messages", messageDoc.id), {
+    const decrypted = await decryptMessage(data.text, data.iv);
+
+    msgs.push({
       ...data,
-      seen: true
+      text: decrypted
     });
+
   }
 
-  const decrypted = await decryptMessage(data.text, data.iv);
+  setMessages(msgs);
+  setTimeout(scrollToBottom, 100);
 
-  msgs.push({
-    ...data,
-    text: decrypted
-  });
-
-}
-
-    setMessages(msgs);
-    setTimeout(scrollToBottom, 100);
-
-  });
-
+});
   return () => unsubscribe();
 
 }, [loginTime]);
