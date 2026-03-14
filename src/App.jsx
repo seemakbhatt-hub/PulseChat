@@ -212,9 +212,20 @@ return ( <div className="chat-container">
       </div>
     )}
 
-    <div className={`message ${isMine ? "sent" : "received"}`}>
-      {msg.text}
+   <div className="message-bubble">
+  <div className={`message ${isMine ? "sent" : "received"}`}>
+    {msg.text}
+  </div>
+
+  {msg.createdAt && (
+    <div className="timestamp">
+      {new Date(msg.createdAt.seconds * 1000).toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit"
+      })}
     </div>
+  )}
+</div>
 
   </div>
 
