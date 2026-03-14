@@ -183,21 +183,25 @@ return ( <div className="chat-container">
   
   <div className="messages">
 
-    {messages.map((msg, i) => (
+    {messages.map((msg, index) => {
 
-      <div
-        key={i}
-        className={`message ${
-          msg.sender === user.displayName ? "sent" : "received"
-        }`}
-      >
+  const isMine = msg.uid === user.uid;
 
-        <div className="sender">{msg.sender}</div>
-        <div className="text">{msg.text}</div>
+  return (
+    <div key={index} className={`message-wrapper ${isMine ? "sent" : "received"}`}>
 
+      <div className="message-name">
+        {msg.name}
       </div>
 
-    ))}
+      <div className={`message ${isMine ? "sent" : "received"}`}>
+        {decryptMessage(msg.text)}
+      </div>
+
+    </div>
+  );
+
+})}
 
     <div ref={messagesEndRef} />
 
