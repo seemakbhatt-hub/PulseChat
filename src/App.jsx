@@ -180,7 +180,7 @@ return ( <div className="login"> <h1>ShadowTalk</h1> <button onClick={login}>Ent
 return ( <div className="chat-container">
 <div className="header">
   <span className="gradient-title">PulseChat By Shankzz</span>
-<button className="gradient-btn logout-btn"
+<button className="logout-btn"
 onClick={logout}>
 Logout
 </button>
