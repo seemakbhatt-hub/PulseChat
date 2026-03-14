@@ -47,13 +47,15 @@ word-wrap:break-word;
 
 animation: messageFade 0.25s ease;
 
-box-shadow:0 2px 8px rgba(0,0,0,0.3);
+box-shadow:
+0 2px 8px rgba(0,0,0,0.3),
+0 4px 12px rgba(120,90,255,0.25);
 }
 
 /* RECEIVED MESSAGE */
 
 .message.received{
-background:linear-gradient(135deg,#3a7bd5,#7b2ff7);
+background:linear-gradient(135deg,#3a7bd5,#6a5af9,#8e54e9);
 color:white;
 align-self:flex-start;
 }
@@ -61,7 +63,7 @@ align-self:flex-start;
 /* SENT MESSAGE */
 
 .message.sent{
-background:linear-gradient(135deg,#4facfe,#8e44ff);
+background:linear-gradient(135deg,#5f72ff,#9b23ea,#c471ed);
 color:white;
 align-self:flex-end;
 }
