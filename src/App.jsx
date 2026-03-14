@@ -199,9 +199,12 @@ return ( <div className="chat-container">
     >
 
       {showName && (
-        <div className="message-name">
-          {msg.name}
-        </div>
+       <div className="message-name">
+  <span className="avatar">
+    {msg.name.charAt(0)}
+  </span>
+  {msg.name}
+</div>
       )}
 
      <div className={`message ${isMine ? "sent" : "received"}`}>
