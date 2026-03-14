@@ -331,3 +331,50 @@ background-position:0% 50%;
 }
 
 }
+/* BASE GRADIENT BUTTON */
+
+.gradient-btn{
+padding:8px 16px;
+border:none;
+border-radius:8px;
+color:white;
+font-weight:600;
+cursor:pointer;
+
+background-size:200% 200%;
+animation:buttonGradientShift 6s ease infinite;
+
+transition:transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.gradient-btn:hover{
+transform:translateY(-2px);
+box-shadow:0 6px 18px rgba(0,0,0,0.35);
+}
+
+@keyframes buttonGradientShift{
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
+}
+/* SEND BUTTON GRADIENT */
+
+.send-btn{
+background:linear-gradient(
+90deg,
+#00c9ff,
+#5b86e5,
+#7c5cff
+);
+}
+
+/* LOGOUT BUTTON GRADIENT */
+
+.logout-btn{
+background:linear-gradient(
+90deg,
+#ff416c,
+#ff4b2b,
+#ff6a00
+);
+}
