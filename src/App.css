@@ -20,15 +20,21 @@ height:100vh;
 .header{
 background:linear-gradient(90deg,#00f2fe,#8e2de2,#6a5af9);
 background-size:200% 200%;
-animation: headerFlow 8s ease infinite;
+animation: headerFlow 12s ease infinite;
 
 color:white;
 font-size:26px;
 padding:20px;
 letter-spacing:2px;
-border-bottom:none;
+
+backdrop-filter:blur(10px);
+-webkit-backdrop-filter:blur(10px);
+
+background-color:rgba(255,255,255,0.05);
 
 box-shadow:0 2px 12px rgba(120,90,255,0.35);
+
+border-bottom:1px solid rgba(255,255,255,0.08);
 }
 
 /* MESSAGE AREA */
