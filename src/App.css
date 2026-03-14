@@ -137,9 +137,7 @@ font-size:14px;
 /* SEND BUTTON */
 
 .input-area button{
-background:black;
-color:#00ff9d;
-border-left:1px solid #00ff9d;
+border:none;
 padding:0 28px;
 cursor:pointer;
 font-size:14px;
@@ -377,4 +375,21 @@ background:linear-gradient(
 #ff4b2b,
 #ff6a00
 );
+}
+/* MOVING GRADIENT BUTTON */
+
+.gradient-btn{
+
+color:white;
+border:none;
+padding:10px 22px;
+border-radius:8px;
+cursor:pointer;
+
+background:linear-gradient(90deg,#00f2fe,#8e2de2,#6a5af9);
+
+background-size:200% 200%;
+
+animation:titleFlow 8s ease infinite;
+
 }
