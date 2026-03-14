@@ -393,3 +393,31 @@ background-size:200% 200%;
 animation:titleFlow 8s ease infinite;
 
 }
+/* LOGOUT BUTTON GRADIENT */
+
+.logout-btn{
+color:white;
+border:none;
+padding:8px 18px;
+border-radius:8px;
+cursor:pointer;
+
+background:linear-gradient(
+90deg,
+#ff4e8a,
+#ff416c,
+#ff1e56
+);
+
+background-size:200% 200%;
+animation:titleFlow 8s ease infinite;
+
+transition:transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* hover effect */
+
+.logout-btn:hover{
+transform:translateY(-2px);
+box-shadow:0 6px 18px rgba(255,65,108,0.4);
+}
