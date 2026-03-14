@@ -183,7 +183,7 @@ return ( <div className="chat-container">
   
   <div className="messages">
 
-   {messages.map((msg, index) => {
+ {messages.map((msg, index) => {
 
   const isMine = msg.uid === user.uid;
 
@@ -191,10 +191,12 @@ return ( <div className="chat-container">
 
   const showName = !previousMessage || previousMessage.uid !== msg.uid;
 
+  const newGroup = !previousMessage || previousMessage.uid !== msg.uid;
+
   return (
     <div
       key={index}
-      className={`message-wrapper ${isMine ? "sent" : "received"}`}
+      className={`message-wrapper ${isMine ? "sent" : "received"} ${newGroup ? "new-group" : ""}`}
     >
 
       {showName && (
