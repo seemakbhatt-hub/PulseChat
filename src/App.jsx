@@ -268,11 +268,12 @@ Logout
   onKeyDown={handleKeyPress}
   placeholder="Type encrypted message..."
 />
-  <button className="gradient-btn send-btn"
+
+<button className="gradient-btn" 
   onClick={sendMessage}>
 Send
 </button>
-
+    
   </div>
 
 </div>
