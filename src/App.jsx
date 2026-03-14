@@ -180,8 +180,7 @@ return ( <div className="login"> <h1>ShadowTalk</h1> <button onClick={login}>Ent
 return ( <div className="chat-container">
 <div className="header">
   <span className="gradient-title">PulseChat By Shankzz</span>
- <button className="gradient-btn"
- onClick={logout}>Logout</button>
+<button onClick={logout}>Logout</button>
 </div>
   
 <div className="online-users">
@@ -266,8 +265,7 @@ return ( <div className="chat-container">
   onKeyDown={handleKeyPress}
   placeholder="Type encrypted message..."
 />
-    <button className="gradient-btn"
-    onClick={sendMessage}>Send</button>
+   <button onClick={sendMessage}>Send</button>
 
   </div>
 
