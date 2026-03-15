@@ -153,8 +153,15 @@ const reactToMessage = async (messageId, emoji) => {
 
 const messageRef = doc(db, "messages", messageId);
 
+const message = messages.find(m => m.id === messageId);
+
+const updatedReactions = {
+  ...(message.reactions || {}),
+  [emoji]: true
+};
+
 await updateDoc(messageRef, {
-  ["reactions." + emoji]: true
+  reactions: updatedReactions
 });
 
 };
