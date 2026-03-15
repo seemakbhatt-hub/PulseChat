@@ -151,10 +151,10 @@ transition:all 0.2s ease;
 /* MESSAGE + TIMESTAMP CONTAINER */
 
 .message-bubble{
-display:flex;
-flex-direction:column;
 position:relative;
-display:inline-block;
+display:inline-flex;
+flex-direction:column;
+align-items:flex-start;
 }
 
 /* HIDDEN TIME */
@@ -542,17 +542,15 @@ background:rgba(120,90,255,0.3);
 /* DISPLAYED REACTIONS UNDER MESSAGE */
 
 .reaction-display{
-position:absolute;
-bottom:-12px;
-left:8px;
+margin-top:2px;
 display:flex;
 gap:4px;
 font-size:13px;
 }
 
 .reaction-display span{
-background:#1e1e1e;
-padding:3px 7px;
-border-radius:12px;
-box-shadow:0 0 6px rgba(0,0,0,0.4);
+background:#1f1f1f;
+padding:2px 6px;
+border-radius:10px;
+font-size:12px;
 }
