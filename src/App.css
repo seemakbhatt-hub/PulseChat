@@ -57,6 +57,20 @@ display:flex;
 justify-content:space-between;
 align-items:center;
 }
+
+/* LOGO + TITLE */
+.logo-title{
+display:flex;
+align-items:center;
+gap:10px;
+}
+
+/* LOGO IMAGE */
+.logo{
+width:36px;
+height:36px;
+object-fit:contain;
+}
 .gradient-title{
 background:linear-gradient(90deg,#00f2fe,#8e2de2,#6a5af9);
 background-size:300% 300%;   /* change from 200% */
