@@ -247,6 +247,14 @@ return ( <div className="chat-container">
     <button onClick={() => reactToMessage(msg.id,"🔥")}>🔥</button>
   </div>
 
+  {msg.reactions && (
+  <div className="reaction-display">
+    {Object.keys(msg.reactions).map((emoji) => (
+      <span key={emoji}>{emoji}</span>
+    ))}
+  </div>
+)}
+
   {msg.createdAt && (
     <div className="timestamp">
       {new Date(msg.createdAt.seconds * 1000).toLocaleTimeString([], {
