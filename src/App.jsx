@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { auth, provider, db } from "./firebase";
 import { signInWithPopup, signOut } from "firebase/auth";
-import { collection, setDoc, onSnapshot, query, orderBy, where, deleteDoc, doc } from "firebase/firestore";
+import { collection, setDoc, onSnapshot, query, orderBy, where, deleteDoc, doc , updateDoc } from "firebase/firestore";
 import { encryptMessage, decryptMessage } from "./crypto";
 import "./App.css";
 import logo from "./mylogo.png";
@@ -143,11 +143,20 @@ await setDoc(doc(collection(db, "messages")), {
   uid: user.uid,
   createdAt: new Date(),
   seen: false
+  reactions: {}
 });
 setInput("");
 
 };
+const reactToMessage = async (messageId, emoji) => {
 
+const messageRef = doc(db, "messages", messageId);
+
+await updateDoc(messageRef, {
+  ["reactions." + emoji]: true
+});
+
+};
 const handleKeyPress = (e) => {
 if (e.key === "Enter") {
 sendMessage();
@@ -225,9 +234,16 @@ return ( <div className="chat-container">
       </div>
     )}
 
-   <div className="message-bubble">
+  <div className="message-bubble">
+
   <div className={`message ${isMine ? "sent" : "received"}`}>
     {msg.text}
+  </div>
+
+  <div className="reactions">
+    <button onClick={() => reactToMessage(msg.id,"👍")}>👍</button>
+    <button onClick={() => reactToMessage(msg.id,"❤️")}>❤️</button>
+    <button onClick={() => reactToMessage(msg.id,"🔥")}>🔥</button>
   </div>
 
   {msg.createdAt && (
