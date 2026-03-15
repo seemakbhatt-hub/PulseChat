@@ -4,7 +4,7 @@ import { signInWithPopup, signOut } from "firebase/auth";
 import { collection, setDoc, onSnapshot, query, orderBy, where, deleteDoc, doc } from "firebase/firestore";
 import { encryptMessage, decryptMessage } from "./crypto";
 import "./App.css";
-
+import logo from "./only logopc.png";
 function App() {
 
 const [user, setUser] = useState(null);
