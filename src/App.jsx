@@ -70,6 +70,7 @@ const unsubscribe = onSnapshot(q, async (snapshot) => {
     const decrypted = await decryptMessage(data.text, data.iv);
 
     msgs.push({
+      id: messageDoc.id,
       ...data,
       text: decrypted
     });
