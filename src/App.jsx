@@ -143,7 +143,7 @@ await setDoc(doc(collection(db, "messages")), {
   name: user.displayName,
   uid: user.uid,
   createdAt: new Date(),
-  seen: false
+  seen: false,
   reactions: {}
 });
 setInput("");
