@@ -173,7 +173,7 @@ return ( <div className="loading"> <h1>Initializing Secure Channel...</h1> </div
 }
 
 if (!user) {
-return ( <div className="login"> <h1>ShadowTalk</h1> <button onClick={login}>Enter Secure Chat</button> </div>
+return ( <div className="login"> <h1>PulseChat</h1> <button onClick={login}>Enter Secure Chat</button> </div>
 );
 }
 
@@ -275,7 +275,7 @@ Send
 </button>
     
   </div>
-
+  
 </div>
 
 );
