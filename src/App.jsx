@@ -224,7 +224,7 @@ return ( <div className="chat-container">
 
   return (
 <div
-  key={index}
+  key={msg.id}
   className={`message-row ${isMine ? "sent" : "received"} ${newGroup ? "new-group" : ""}`}
 >
 
