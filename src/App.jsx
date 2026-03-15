@@ -4,7 +4,7 @@ import { signInWithPopup, signOut } from "firebase/auth";
 import { collection, setDoc, onSnapshot, query, orderBy, where, deleteDoc, doc } from "firebase/firestore";
 import { encryptMessage, decryptMessage } from "./crypto";
 import "./App.css";
-import logo from "./only logopc.png";
+import logo from "./mylogo.png";
 function App() {
 
 const [user, setUser] = useState(null);
@@ -179,11 +179,14 @@ return ( <div className="login"> <h1>PulseChat</h1> <button onClick={login}>Ente
 
 return ( <div className="chat-container">
 <div className="header">
-  <span className="gradient-title">PulseChat By Shankzz</span>
-<button className="logout-btn"
-onClick={logout}>
-Logout
-</button>
+
+  <div className="logo-title">
+    <img src={logo} className="logo" alt="PulseChat logo"/>
+    <span className="gradient-title">PulseChat By Shankzz</span>
+  </div>
+
+  <button className="logout-btn" onClick={logout}>Logout</button>
+
 </div>
   
 <div className="online-users">
