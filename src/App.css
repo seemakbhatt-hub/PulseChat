@@ -43,7 +43,26 @@ background:rgba(0,0,0,0.25);
 backdrop-filter:blur(12px);
 position:relative;
 overflow:hidden;
+border:1px solid rgba(120,90,255,0.25);
 }
+
+.chat-container::after{
+content:"";
+position:absolute;
+top:0;
+left:0;
+right:0;
+bottom:0;
+
+border-radius:0;
+
+box-shadow:
+0 0 40px rgba(120,90,255,0.15),
+0 0 80px rgba(120,90,255,0.08);
+
+pointer-events:none;
+}
+
 .chat-container::before{
 content:"";
 position:absolute;
@@ -85,8 +104,8 @@ gap:10px;
 
 /* LOGO IMAGE */
 .logo{
-width:36px;
-height:36px;
+width:48px;
+height:48px;
 object-fit:contain;
 }
 .gradient-title{
