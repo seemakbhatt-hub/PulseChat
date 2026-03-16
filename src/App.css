@@ -329,11 +329,13 @@ color:#888;
 margin-bottom:4px;
 margin-left:4px;
 }
-
+.message-row{
+  margin-top:2px;
+}
 
 
 .message-row.new-group{
-margin-top:10px;
+margin-top:6px;
 }
 @keyframes messageFade{
 
