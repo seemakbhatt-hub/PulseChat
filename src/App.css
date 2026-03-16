@@ -135,10 +135,11 @@ scroll-behavior:smooth;
 .message{
 max-width:60%;
 padding:12px 16px;
-border-radius:10px;
+border-radius:16px;
 font-size:14px;
 word-wrap:break-word;
 
+position:relative;
 animation: messageFade 0.25s ease;
 
 box-shadow:
@@ -196,7 +197,33 @@ background:linear-gradient(135deg,#5f72ff,#9b23ea,#c471ed);
 color:white;
 align-self:flex-end;
 }
+/* BUBBLE TAIL - SENT */
 
+.message.sent::after{
+content:"";
+position:absolute;
+right:-6px;
+bottom:8px;
+
+border-width:6px;
+border-style:solid;
+
+border-color:transparent transparent transparent #9b23ea;
+}
+
+/* BUBBLE TAIL - RECEIVED */
+
+.message.received::after{
+content:"";
+position:absolute;
+left:-6px;
+bottom:8px;
+
+border-width:6px;
+border-style:solid;
+
+border-color:transparent #3a7bd5 transparent transparent;
+}
 /* INPUT AREA */
 
 .input-area{
