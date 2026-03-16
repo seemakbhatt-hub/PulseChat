@@ -162,7 +162,7 @@ align-items:flex-start;
 .timestamp{
 font-size:11px;
 color:#777;
-margin-top:2px;
+margin-top:1px;
 opacity:0;
 transition:opacity 0.2s ease;
 pointer-events:none;
@@ -512,9 +512,11 @@ transform:translateY(-300px);
 
 }
 .reactions{
+position:absolute;
+top:-12px;
+right:0;
 display:flex;
 gap:6px;
-margin-top:4px;
 
 opacity:0;
 transition:opacity 0.2s ease;
@@ -542,10 +544,10 @@ background:rgba(120,90,255,0.3);
 /* DISPLAYED REACTIONS UNDER MESSAGE */
 
 .reaction-display{
-margin-top:2px;
+margin-top:1px;
 display:flex;
 gap:4px;
-font-size:13px;
+font-size:12px;
 }
 
 .reaction-display span{
