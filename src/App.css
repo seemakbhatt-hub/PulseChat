@@ -197,33 +197,7 @@ background:linear-gradient(135deg,#5f72ff,#9b23ea,#c471ed);
 color:white;
 align-self:flex-end;
 }
-/* BUBBLE TAIL - SENT */
 
-.message.sent::after{
-content:"";
-position:absolute;
-right:-6px;
-bottom:8px;
-
-border-width:6px;
-border-style:solid;
-
-border-color:transparent transparent transparent #9b23ea;
-}
-
-/* BUBBLE TAIL - RECEIVED */
-
-.message.received::after{
-content:"";
-position:absolute;
-left:-6px;
-bottom:8px;
-
-border-width:6px;
-border-style:solid;
-
-border-color:transparent #3a7bd5 transparent transparent;
-}
 /* INPUT AREA */
 
 .input-area{
