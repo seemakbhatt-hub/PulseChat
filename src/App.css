@@ -559,3 +559,66 @@ padding:2px 6px;
 border-radius:10px;
 font-size:12px;
 }
+/* LOGIN SCREEN */
+
+.login{
+height:100vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+gap:14px;
+}
+
+/* LOGIN BOX */
+
+.login-box{
+background:rgba(0,0,0,0.5);
+backdrop-filter:blur(12px);
+padding:30px 25px;
+border-radius:16px;
+
+box-shadow:
+0 0 40px rgba(120,90,255,0.3);
+
+display:flex;
+flex-direction:column;
+gap:12px;
+width:260px;
+}
+
+/* INPUT FIELDS */
+
+.login-box input{
+padding:10px;
+border-radius:8px;
+border:1px solid rgba(120,90,255,0.4);
+
+background:black;
+color:white;
+outline:none;
+font-size:14px;
+}
+
+/* BUTTON */
+
+.login-box button{
+padding:10px;
+border-radius:8px;
+border:none;
+cursor:pointer;
+font-weight:600;
+}
+
+/* TOGGLE TEXT */
+
+.login-box p{
+font-size:12px;
+color:#aaa;
+text-align:center;
+cursor:pointer;
+}
+
+.login-box hr{
+border:0.5px solid rgba(255,255,255,0.1);
+}
