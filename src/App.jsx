@@ -205,44 +205,45 @@ return ( <div className="loading"> <h1>Initializing Secure Channel...</h1> </div
 
 if (!user) {
   return (
-    <div className="login">
+  <div className="login">
 
-      <h1>PulseChat</h1>
+  <h1 className="gradient-title">PulseChat</h1>
 
-      <input
-        type="email"
-        placeholder="Enter Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
+  <div className="login-box">
 
-      <input
-        type="password"
-        placeholder="Enter Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
+    <input
+      type="email"
+      placeholder="Enter Email"
+      value={email}
+      onChange={(e) => setEmail(e.target.value)}
+    />
 
-      <button onClick={handleAuth}>
-        {isSignup ? "Sign Up" : "Login"}
-      </button>
+    <input
+      type="password"
+      placeholder="Enter Password"
+      value={password}
+      onChange={(e) => setPassword(e.target.value)}
+    />
 
-      <p 
-        onClick={() => setIsSignup(!isSignup)} 
-        style={{ cursor: "pointer" }}
-      >
-        {isSignup 
-          ? "Already have an account? Login" 
-          : "New user? Sign Up"}
-      </p>
+    <button onClick={handleAuth} className="gradient-btn">
+      {isSignup ? "Sign Up" : "Login"}
+    </button>
 
-      <hr />
+    <p onClick={() => setIsSignup(!isSignup)}>
+      {isSignup 
+        ? "Already have an account? Login" 
+        : "New user? Sign Up"}
+    </p>
 
-      <button onClick={login}>
-        Continue with Google
-      </button>
+    <hr />
 
-    </div>
+    <button onClick={login} className="gradient-btn">
+      Continue with Google
+    </button>
+
+  </div>
+
+</div>
   );
 }
 return ( <div className="chat-container">
