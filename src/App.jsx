@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { auth, provider, db } from "./firebase";
-import { signInWithPopup, signOut } from "firebase/auth";
+import { signInWithPopup, signOut,createUserWithEmailAndPassword,signInWithEmailAndPassword} from "firebase/auth";
 import { collection, setDoc, onSnapshot, query, orderBy, where, deleteDoc, doc , updateDoc } from "firebase/firestore";
 import { encryptMessage, decryptMessage } from "./crypto";
 import "./App.css";
@@ -9,6 +9,20 @@ function App() {
 
 const [user, setUser] = useState(null);
 const [messages, setMessages] = useState([]);
+const [email, setEmail] = useState("");
+const [password, setPassword] = useState("");
+const [isSignup, setIsSignup] = useState(false);
+const handleAuth = async () => {
+  try {
+    if (isSignup) {
+      await createUserWithEmailAndPassword(auth, email, password);
+    } else {
+      await signInWithEmailAndPassword(auth, email, password);
+    }
+  } catch (err) {
+    alert(err.message);
+  }
+};
 const [loginTime, setLoginTime] = useState(null);
 const [input, setInput] = useState("");
 const [loading, setLoading] = useState(true);
