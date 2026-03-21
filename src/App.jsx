@@ -204,10 +204,47 @@ return ( <div className="loading"> <h1>Initializing Secure Channel...</h1> </div
 }
 
 if (!user) {
-return ( <div className="login"> <h1>PulseChat</h1> <button onClick={login}>Enter Secure Chat</button> </div>
-);
-}
+  return (
+    <div className="login">
 
+      <h1>PulseChat</h1>
+
+      <input
+        type="email"
+        placeholder="Enter Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+
+      <input
+        type="password"
+        placeholder="Enter Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+
+      <button onClick={handleAuth}>
+        {isSignup ? "Sign Up" : "Login"}
+      </button>
+
+      <p 
+        onClick={() => setIsSignup(!isSignup)} 
+        style={{ cursor: "pointer" }}
+      >
+        {isSignup 
+          ? "Already have an account? Login" 
+          : "New user? Sign Up"}
+      </p>
+
+      <hr />
+
+      <button onClick={login}>
+        Continue with Google
+      </button>
+
+    </div>
+  );
+}
 return ( <div className="chat-container">
 <div className="header">
 
