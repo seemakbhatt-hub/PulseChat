@@ -12,6 +12,7 @@ const [messages, setMessages] = useState([]);
 const [email, setEmail] = useState("");
 const [password, setPassword] = useState("");
 const [isSignup, setIsSignup] = useState(false);
+const [username, setUsername] = useState("");
 const handleAuth = async () => {
   try {
     if (isSignup) {
@@ -210,6 +211,14 @@ if (!user) {
   <h1 className="gradient-title">PulseChat</h1>
 
   <div className="login-box">
+  {isSignup && (
+  <input
+    type="text"
+    placeholder="Enter Username"
+    value={username}
+    onChange={(e) => setUsername(e.target.value)}
+  />
+)}
 
     <input
       type="email"
