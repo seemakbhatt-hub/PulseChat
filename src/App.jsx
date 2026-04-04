@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { auth, provider, db } from "./firebase";
+import { updateProfile } from "firebase/auth";
 import { signInWithPopup, signOut,createUserWithEmailAndPassword,signInWithEmailAndPassword} from "firebase/auth";
 import { collection, setDoc, onSnapshot, query, orderBy, where, deleteDoc, doc , updateDoc } from "firebase/firestore";
 import { encryptMessage, decryptMessage } from "./crypto";
@@ -9,15 +10,23 @@ function App() {
 
 const [user, setUser] = useState(null);
 const [messages, setMessages] = useState([]);
+const [mode, setMode] = useState("chat");
 const [email, setEmail] = useState("");
 const [password, setPassword] = useState("");
 const [isSignup, setIsSignup] = useState(false);
 const [username, setUsername] = useState("");
 const handleAuth = async () => {
   try {
+    if (isSignup && !username.trim()) {
+  alert("Username required");
+  return;
+}
     if (isSignup) {
       await createUserWithEmailAndPassword(auth, email, password);
-    } else {
+      await updateProfile(res.user,{displayName: username});
+   
+    
+} else {
       await signInWithEmailAndPassword(auth, email, password);
     }
   } catch (err) {
@@ -26,6 +35,7 @@ const handleAuth = async () => {
 };
 const [loginTime, setLoginTime] = useState(null);
 const [input, setInput] = useState("");
+const [aiMessages, setAiMessages] = useState([]);
 const [loading, setLoading] = useState(true);
 const [typingUser, setTypingUser] = useState("");
 const [onlineUsers, setOnlineUsers] = useState([]);
@@ -50,7 +60,16 @@ await setDoc(doc(db, "onlineUsers", u.uid), {
 });
 
 window.userDocId = u.uid;
-      
+
+  window.addEventListener("beforeunload", async () => {
+    try {
+      await deleteDoc(doc(db, "onlineUsers", u.uid));
+    } catch (err) {
+      console.log("Cleanup failed", err);
+    }
+  });
+
+}
     }
 
     setLoading(false);
@@ -162,6 +181,7 @@ await setDoc(doc(collection(db, "messages")), {
   reactions: {}
 });
 setInput("");
+  await deleteDoc(doc(db, "typing", user.uid));
 
 };
 const reactToMessage = async (messageId, emoji) => {
@@ -263,15 +283,29 @@ return ( <div className="chat-container">
     <span className="gradient-title">PulseChat By Shankzz</span>
   </div>
 
-  <button className="logout-btn" onClick={logout}>Logout</button>
+ <div className="header-buttons">
+  <button onClick={() => setMode("ai")} className="ai-btn">
+    Chat with AI
+  </button>
+
+  <button onClick={() => setMode("chat")} className="ai-btn">
+    Normal Chat
+  </button>
+
+  <button className="logout-btn" onClick={logout}>
+    Logout
+  </button>
+</div>
 
 </div>
   
-<div className="online-users">
-  Online: {onlineUsers.join(", ")}
-</div>
-  
-  <div className="messages">
+{mode === "chat" && (
+  <>
+    <div className="online-users">
+      Online: {onlineUsers.join(", ")}
+    </div>
+
+    <div className="messages">
 
  {messages.map((msg, index) => {
 
@@ -294,7 +328,6 @@ return ( <div className="chat-container">
       {msg.name?.charAt(0)}
     </div>
   )}
-
   <div className="message-content">
 
     {showName && (
@@ -372,6 +405,15 @@ Send
     
   </div>
   
+</div>
+  )}
+  {mode === "ai" && (
+  <div className="ai-screen">
+    <h2>🤖 AI Chat</h2>
+    <p>AI mode is active</p>
+  </div>
+)}
+
 </div>
 
 );
