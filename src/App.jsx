@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { auth, provider, db } from "./firebase";
 import { updateProfile } from "firebase/auth";
+import { getAIresponse } from "./gemini";
 import { signInWithPopup, signOut,createUserWithEmailAndPassword,signInWithEmailAndPassword} from "firebase/auth";
 import { collection, setDoc, onSnapshot, query, orderBy, where, deleteDoc, doc , updateDoc } from "firebase/firestore";
 import { encryptMessage, decryptMessage } from "./crypto";
@@ -22,6 +23,7 @@ const handleAuth = async () => {
   return;
 }
     if (isSignup) {
+      const res = await
       await createUserWithEmailAndPassword(auth, email, password);
       await updateProfile(res.user,{displayName: username});
    
@@ -70,7 +72,6 @@ window.userDocId = u.uid;
   });
 
 }
-    }
 
     setLoading(false);
   });
@@ -180,6 +181,25 @@ await setDoc(doc(collection(db, "messages")), {
   seen: false,
   reactions: {}
 });
+  const sendAIMessage = async () => {
+
+  if (!input.trim()) return;
+
+  const userMsg = { role: "user", text: input };
+  setAiMessages((prev) => [...prev, userMsg]);
+
+  try {
+    const reply = await getAIResponse(input);
+
+    const aiMsg = { role: "ai", text: reply };
+    setAiMessages((prev) => [...prev, aiMsg]);
+
+  } catch (err) {
+    console.log(err);
+  }
+
+  setInput("");
+};
 setInput("");
   await deleteDoc(doc(db, "typing", user.uid));
 
