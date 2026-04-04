@@ -197,8 +197,6 @@ await setDoc(doc(collection(db, "messages")), {
   } catch (err) {
     console.log(err);
   }
-
-  setInput("");
 };
 setInput("");
   await deleteDoc(doc(db, "typing", user.uid));
@@ -429,11 +427,34 @@ Send
   )}
   {mode === "ai" && (
   <div className="ai-screen">
+
     <h2>🤖 AI Chat</h2>
-    <p>AI mode is active</p>
+
+    <div className="messages">
+      {aiMessages.map((msg, i) => (
+        <div
+          key={i}
+          className={`message ${msg.role === "user" ? "sent" : "received"}`}
+        >
+          {msg.text}
+        </div>
+      ))}
+    </div>
+
+    <div className="input-area">
+      <input
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        placeholder="Ask AI anything..."
+      />
+
+      <button onClick={sendAIMessage} className="gradient-btn">
+        Send
+      </button>
+    </div>
+
   </div>
 )}
-
 </div>
 
 );
