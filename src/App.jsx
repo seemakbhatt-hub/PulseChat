@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { auth, provider, db } from "./firebase";
 import { updateProfile } from "firebase/auth";
-import { getAIresponse } from "./gemini";
+import { getAIResponse } from "./gemini";
 import { signInWithPopup, signOut,createUserWithEmailAndPassword,signInWithEmailAndPassword} from "firebase/auth";
 import { collection, setDoc, onSnapshot, query, orderBy, where, deleteDoc, doc , updateDoc } from "firebase/firestore";
 import { encryptMessage, decryptMessage } from "./crypto";
@@ -24,7 +24,7 @@ const handleAuth = async () => {
 }
     if (isSignup) {
       const res = await
-      await createUserWithEmailAndPassword(auth, email, password);
+      createUserWithEmailAndPassword(auth, email, password);
       await updateProfile(res.user,{displayName: username});
    
     
@@ -181,8 +181,13 @@ await setDoc(doc(collection(db, "messages")), {
   seen: false,
   reactions: {}
 });
-  const sendAIMessage = async () => {
+ 
+setInput("");
+  await deleteDoc(doc(db, "typing", user.uid));
 
+};
+ 
+const sendAIMessage = async () => {
   if (!input.trim()) return;
 
   const userMsg = { role: "user", text: input };
@@ -197,10 +202,8 @@ await setDoc(doc(collection(db, "messages")), {
   } catch (err) {
     console.log(err);
   }
-};
-setInput("");
-  await deleteDoc(doc(db, "typing", user.uid));
 
+  setInput("");
 };
 const reactToMessage = async (messageId, emoji) => {
 
