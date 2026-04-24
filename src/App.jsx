@@ -328,71 +328,67 @@ return ( <div className="chat-container">
 
     <div className="messages">
 
- {messages.map((msg, index) => {
-
+{messages.map((msg, index) => {
   const isMine = msg.uid === user.uid;
-
   const previousMessage = messages[index - 1];
-
   const showName = !previousMessage || previousMessage.uid !== msg.uid;
-
   const newGroup = !previousMessage || previousMessage.uid !== msg.uid;
 
   return (
-<div
-  key={msg.id}
-  className={`message-row ${isMine ? "sent" : "received"} ${newGroup ? "new-group" : ""}`}
->
-</div>
-  {!isMine && showName && (
-    <div className="avatar">
-      {msg.name?.charAt(0)}
-    </div>
-  )}
-  <div className="message-content">
+    <div
+      key={msg.id}
+      className={`message-row ${isMine ? "sent" : "received"} ${newGroup ? "new-group" : ""}`}
+    >
+      {/* 1. Avatar Section */}
+      {!isMine && showName && (
+        <div className="avatar">
+          {msg.name?.charAt(0)}
+        </div>
+      )}
 
-    {showName && (
-      <div className="message-name">
-        {msg.name}
+      {/* 2. Message Content Section */}
+      <div className="message-content">
+        {showName && (
+          <div className="message-name">
+            {msg.name}
+          </div>
+        )}
+        
+        <div className="message-bubble">
+          <div className={`message ${isMine ? "sent" : "received"}`}>
+            {msg.text}
+          </div>
+
+          {/* 3. Reactions Section */}
+          <div className="reactions">
+            <button onClick={() => reactToMessage(msg.id, "👍")}>👍</button>
+            <button onClick={() => reactToMessage(msg.id, "❤️")}>❤️</button>
+            <button onClick={() => reactToMessage(msg.id, "🔥")}>🔥</button>
+          </div>
+
+          {msg.reactions && (
+            <div className="reaction-display">
+              {Object.keys(msg.reactions).map((emoji) => (
+                <span key={emoji}>{emoji}</span>
+              ))}
+            </div>
+          )}
+
+          {/* 4. Timestamp */}
+          {msg.createdAt && (
+            <div className="timestamp">
+              {new Date(msg.createdAt.seconds * 1000).toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit"
+              })}
+            </div>
+          )}
+        </div>
       </div>
-    )}
-
-  <div className="message-bubble">
-
-  <div className={`message ${isMine ? "sent" : "received"}`}>
-    {msg.text}
-  </div>
-
-  <div className="reactions">
-    <button onClick={() => reactToMessage(msg.id,"👍")}>👍</button>
-    <button onClick={() => reactToMessage(msg.id,"❤️")}>❤️</button>
-    <button onClick={() => reactToMessage(msg.id,"🔥")}>🔥</button>
-  </div>
-
-  {msg.reactions && (
-  <div className="reaction-display">
-    {Object.keys(msg.reactions).map((emoji) => (
-      <span key={emoji}>{emoji}</span>
-    ))}
-  </div>
-)}
-
-  {msg.createdAt && (
-    <div className="timestamp">
-      {new Date(msg.createdAt.seconds * 1000).toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit"
-      })}
     </div>
-  )}
-</div>
-
-  </div>
-
-</div>
   );
-
 })}
+
 
     <div ref={messagesEndRef} />
 
