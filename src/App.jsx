@@ -324,7 +324,7 @@ return ( <div className="chat-container">
   <>
     <div className="online-users">
       Online: {onlineUsers.join(", ")}
-    </>
+    </div>
 
     <div className="messages">
 
@@ -348,6 +348,7 @@ return ( <div className="chat-container">
     <div className="avatar">
       {msg.name?.charAt(0)}
     </div>
+  </>
   )}
   <div className="message-content">
 
