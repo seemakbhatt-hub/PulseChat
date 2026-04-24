@@ -343,12 +343,11 @@ return ( <div className="chat-container">
   key={msg.id}
   className={`message-row ${isMine ? "sent" : "received"} ${newGroup ? "new-group" : ""}`}
 >
-
+</div>
   {!isMine && showName && (
     <div className="avatar">
       {msg.name?.charAt(0)}
     </div>
-  </>
   )}
   <div className="message-content">
 
