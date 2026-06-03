@@ -1,7 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { auth, provider, db } from "./firebase";
 import { updateProfile } from "firebase/auth";
-import { getAIResponse } from "./gemini";
 import { signInWithPopup, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { collection, setDoc, onSnapshot, query, orderBy, where, deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { encryptMessage, decryptMessage } from "./crypto";
@@ -11,14 +10,12 @@ import logo from "./mylogo.png";
 function App() {
   const [user, setUser] = useState(null);
   const [messages, setMessages] = useState([]);
-  const [mode, setMode] = useState("chat");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSignup, setIsSignup] = useState(false);
   const [username, setUsername] = useState("");
   const [loginTime, setLoginTime] = useState(null);
   const [input, setInput] = useState("");
-  const [aiMessages, setAiMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [typingUser, setTypingUser] = useState("");
   const [onlineUsers, setOnlineUsers] = useState([]);
@@ -103,19 +100,6 @@ function App() {
     await deleteDoc(doc(db, "typing", user.uid));
   };
 
-  const sendAIMessage = async () => {
-    if (!input.trim()) return;
-    const userMsg = { role: "user", text: input };
-    setAiMessages((prev) => [...prev, userMsg]);
-    setInput("");
-    try {
-      const reply = await getAIResponse(input);
-      setAiMessages((prev) => [...prev, { role: "ai", text: reply }]);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   const reactToMessage = async (messageId, emoji) => {
     const messageRef = doc(db, "messages", messageId);
     const message = messages.find(m => m.id === messageId);
@@ -160,62 +144,92 @@ function App() {
           <img src={logo} className="logo" alt="logo" />
           <span className="gradient-title">PulseChat By Shankzz</span>
         </div>
-        <div className="header-buttons">
-          <button onClick={() => setMode("ai")} className="ai-btn">Chat with AI</button>
-          <button onClick={() => setMode("chat")} className="ai-btn">Normal Chat</button>
+        <div className="header-buttons"
           <button className="logout-btn" onClick={logout}>Logout</button>
         </div>
       </div>
+<div className="chat-content">
+  <div className="online-users">
+    Online: {onlineUsers.join(", ")}
+  </div>
 
-      {mode === "chat" ? (
-        <div className="chat-content">
-          <div className="online-users">Online: {onlineUsers.join(", ")}</div>
-          <div className="messages">
-            {messages.map((msg, index) => {
-              const isMine = msg.uid === user.uid;
-              const showName = index === 0 || messages[index - 1].uid !== msg.uid;
-              return (
-                <div key={msg.id} className={`message-row ${isMine ? "sent" : "received"}`}>
-                  {!isMine && showName && <div className="avatar">{msg.name?.charAt(0)}</div>}
-                  <div className="message-content">
-                    {showName && <div className="message-name">{msg.name}</div>}
-                    <div className="message-bubble">
-                      <div className="message-text">{msg.text}</div>
-                      <div className="reactions">
-                        <button onClick={() => reactToMessage(msg.id, "👍")}>👍</button>
-                        <button onClick={() => reactToMessage(msg.id, "❤️")}>❤️</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-            <div ref={messagesEndRef} />
-          </div>
-          <div className="input-area">
-            <input 
-              value={input} 
-              onChange={(e) => setInput(e.target.value)} 
-              onKeyDown={(e) => e.key === "Enter" && sendMessage()} 
-              placeholder="Type a message..." 
-            />
-            <button className="gradient-btn" onClick={sendMessage}>Send</button>
+  <div className="messages">
+    {messages.map((msg, index) => {
+      const isMine = msg.uid === user.uid;
+      const showName =
+        index === 0 || messages[index - 1].uid !== msg.uid;
+
+      return (
+        <div
+          key={msg.id}
+          className={`message-row ${
+            isMine ? "sent" : "received"
+          }`}
+        >
+          {!isMine && showName && (
+            <div className="avatar">
+              {msg.name?.charAt(0)}
+            </div>
+          )}
+
+          <div className="message-content">
+            {showName && (
+              <div className="message-name">
+                {msg.name}
+              </div>
+            )}
+
+            <div className="message-bubble">
+              <div className="message-text">
+                {msg.text}
+              </div>
+
+              <div className="reactions">
+                <button
+                  onClick={() =>
+                    reactToMessage(msg.id, "👍")
+                  }
+                >
+                  👍
+                </button>
+
+                <button
+                  onClick={() =>
+                    reactToMessage(msg.id, "❤️")
+                  }
+                >
+                  ❤️
+                </button>
+              </div>
+            </div>
           </div>
         </div>
-      ) : (
-        <div className="ai-screen">
-          <h2>🤖 AI Chat</h2>
-          <div className="messages">
-            {aiMessages.map((msg, i) => (
-              <div key={i} className={`message ${msg.role === "user" ? "sent" : "received"}`}>{msg.text}</div>
-            ))}
-          </div>
-          <div className="input-area">
-            <input value={input} onChange={(e) => setInput(e.target.value)} placeholder="Ask AI..." />
-            <button onClick={sendAIMessage} className="gradient-btn">Send</button>
-          </div>
-        </div>
-      )}
+      );
+    })}
+
+    <div ref={messagesEndRef} />
+  </div>
+
+  <div className="input-area">
+    <input
+      value={input}
+      onChange={(e) => setInput(e.target.value)}
+      onKeyDown={(e) =>
+        e.key === "Enter" && sendMessage()
+      }
+      placeholder="Type a message..."
+    />
+
+    <button
+      className="gradient-btn"
+      onClick={sendMessage}
+    >
+      Send
+    </button>
+  </div>
+</div>
+
+ 
     </div>
   );
 }
