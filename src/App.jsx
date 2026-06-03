@@ -92,7 +92,7 @@ function App() {
       iv: encrypted.iv,
       name: user.displayName,
       uid: user.uid,
-    import { serverTimestamp } from "firebase/firestore";
+   createdAt: new Date(),
       seen: false,
       reactions: {}
     });
