@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { auth, provider, db } from "./firebase";
 import { updateProfile } from "firebase/auth";
 import {
+  signInWithPopup,
   signInWithRedirect,
   getRedirectResult,
   signOut,
@@ -26,7 +27,6 @@ function App() {
   const [loginTime, setLoginTime] = useState(null);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(true);
-  const [typingUser, setTypingUser] = useState("");
   const [onlineUsers, setOnlineUsers] = useState([]);
   const messagesEndRef = useRef(null);
 
@@ -51,52 +51,59 @@ function App() {
     }
   };
 
+  // Try popup first — if browser blocks it, fall back to redirect
   const handleGoogleSignIn = async () => {
     try {
-      await signInWithRedirect(auth, provider);
+      await signInWithPopup(auth, provider);
     } catch (err) {
-      alert(err.message);
+      if (err.code === "auth/popup-blocked" || err.code === "auth/popup-closed-by-user") {
+        try {
+          await signInWithRedirect(auth, provider);
+        } catch (redirectErr) {
+          alert(redirectErr.message);
+        }
+      } else {
+        alert(err.message);
+      }
     }
   };
 
-  // KEY FIX: Handle redirect result FIRST, before onAuthStateChanged settles
+  // Single clean useEffect for auth — handles BOTH popup and redirect sign-in
   useEffect(() => {
-    setLoading(true);
-    getRedirectResult(auth)
-      .then(async (result) => {
-        if (result && result.user) {
-          // User came back from Google redirect — set them up
-          const u = result.user;
+    let unsubscribeAuth = null;
+
+    const initAuth = async () => {
+      // Check if user is returning from a Google redirect
+      try {
+        await getRedirectResult(auth);
+        // If redirect happened, onAuthStateChanged below will pick up the user automatically
+      } catch (err) {
+        console.error("Redirect result error:", err.message);
+      }
+
+      // Now listen for auth state — this handles popup, redirect, and email login
+      unsubscribeAuth = auth.onAuthStateChanged(async (u) => {
+        if (u) {
+          setUser(u);
           setLoginTime(new Date());
           await setDoc(doc(db, "onlineUsers", u.uid), {
-            name: u.displayName || "Anonymous"
+            name: u.displayName || "Anonymous",
           });
           window.userDocId = u.uid;
-          setUser(u);
+        } else {
+          setUser(null);
+          setLoginTime(null);
         }
-      })
-      .catch((err) => {
-        alert(err.message);
-      })
-      .finally(() => {
-        // Now let onAuthStateChanged take over
-        const unsubscribe = auth.onAuthStateChanged(async (u) => {
-          if (u) {
-            setUser(u);
-            if (!loginTime) {
-              setLoginTime(new Date());
-              await setDoc(doc(db, "onlineUsers", u.uid), {
-                name: u.displayName || "Anonymous"
-              });
-              window.userDocId = u.uid;
-            }
-          } else {
-            setUser(null);
-          }
-          setLoading(false);
-        });
-        return () => unsubscribe();
+        setLoading(false);
       });
+    };
+
+    initAuth();
+
+    // Proper cleanup — this actually runs when component unmounts
+    return () => {
+      if (unsubscribeAuth) unsubscribeAuth();
+    };
   }, []);
 
   useEffect(() => {
@@ -120,9 +127,8 @@ function App() {
   }, [loginTime, user]);
 
   useEffect(() => {
-    const q = query(collection(db, "onlineUsers"));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const users = snapshot.docs.map(doc => doc.data().name);
+    const unsubscribe = onSnapshot(query(collection(db, "onlineUsers")), (snapshot) => {
+      const users = snapshot.docs.map((d) => d.data().name);
       setOnlineUsers(users);
     });
     return () => unsubscribe();
@@ -138,7 +144,7 @@ function App() {
       uid: user.uid,
       createdAt: new Date(),
       seen: false,
-      reactions: {}
+      reactions: {},
     });
     setInput("");
     await deleteDoc(doc(db, "typing", user.uid));
@@ -146,7 +152,7 @@ function App() {
 
   const reactToMessage = async (messageId, emoji) => {
     const messageRef = doc(db, "messages", messageId);
-    const message = messages.find(m => m.id === messageId);
+    const message = messages.find((m) => m.id === messageId);
     const updatedReactions = { ...(message.reactions || {}), [emoji]: true };
     await updateDoc(messageRef, { reactions: updatedReactions });
   };
@@ -222,15 +228,12 @@ function App() {
       </div>
 
       <div className="chat-content">
-        <div className="online-users">
-          Online: {onlineUsers.join(", ")}
-        </div>
+        <div className="online-users">Online: {onlineUsers.join(", ")}</div>
 
         <div className="messages">
           {messages.map((msg, index) => {
             const isMine = msg.uid === user.uid;
             const showName = index === 0 || messages[index - 1].uid !== msg.uid;
-
             return (
               <div
                 key={msg.id}
@@ -240,9 +243,7 @@ function App() {
                   <div className="avatar">{msg.name?.charAt(0)}</div>
                 )}
                 <div className="message-content">
-                  {showName && (
-                    <div className="message-name">{msg.name}</div>
-                  )}
+                  {showName && <div className="message-name">{msg.name}</div>}
                   <div className="message-bubble">
                     <div className="message-text">{msg.text}</div>
                     <div className="reactions">
