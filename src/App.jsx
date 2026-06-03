@@ -1,3 +1,7 @@
+App.jsx — Fixed Code for PulseChat
+Replace your entire src/App.jsx with this code. Three bugs were fixed: (1) Google Sign-In now has proper error handling via
+handleGoogleSignIn(), (2) The Google button's onClick now calls handleGoogleSignIn, (3) The header JSX div structure was
+corrected — mismatched tags were causing the red X build failure.
 import { useEffect, useState, useRef } from "react";
 import { auth, provider, db } from "./firebase";
 import { updateProfile } from "firebase/auth";
@@ -245,4 +249,4 @@ PulseChat
     
 
   );
-export default App
+export default App;
