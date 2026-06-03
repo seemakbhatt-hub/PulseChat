@@ -2,10 +2,8 @@
 import { useEffect, useState, useRef } from "react";
 import { auth, provider, db } from "./firebase";
 import { updateProfile } from "firebase/auth";
-import { signInWithPopup, signOut, createUserWithEmailAndPassword,
-  signInWithEmailAndPassword } from "firebase/auth";
-import { collection, setDoc, onSnapshot, query, orderBy, where,
-  deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { signInWithPopup, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { collection, setDoc, onSnapshot, query, orderBy, where, deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { encryptMessage, decryptMessage } from "./crypto";
 import "./App.css";
 import logo from "./mylogo.png";
@@ -41,7 +39,6 @@ function App() {
       alert(err.message);
     }
   };
-  // FIX 1: Google Sign-In now has proper error handling
   const handleGoogleSignIn = async () => {
     try {
       await signInWithPopup(auth, provider);
@@ -54,9 +51,7 @@ function App() {
       setUser(u);
       if (u) {
         setLoginTime(new Date());
-        await setDoc(doc(db, "onlineUsers", u.uid), {
-          name: u.displayName || "Anonymous"
-        });
+        await setDoc(doc(db, "onlineUsers", u.uid), { name: u.displayName || "Anonymous" });
         window.userDocId = u.uid;
       }
       setLoading(false);
@@ -73,10 +68,10 @@ function App() {
     const unsubscribe = onSnapshot(q, async (snapshot) => {
       const msgs = [];
       for (let messageDoc of snapshot.docs) {
+      }
         const data = messageDoc.data();
         const decrypted = await decryptMessage(data.text, data.iv);
         msgs.push({ id: messageDoc.id, ...data, text: decrypted });
-      }
       setMessages(msgs);
       setTimeout(scrollToBottom, 100);
     });
@@ -117,11 +112,18 @@ function App() {
     }
     await signOut(auth);
   };
-  if (loading) return (
-    
+  // FIX: wrapped in parentheses so JSX parses correctly
+  if (loading) {
+    return (
+      
+
+        
 Initializing Secure Channel...
 
-  );
+      
+
+    );
+  }
   if (!user) {
     return (
       
@@ -148,7 +150,6 @@ PulseChat
           
 
           
-          {/* FIX 2: Google button now calls handleGoogleSignIn */}
           
             Continue with Google
           
@@ -161,7 +162,6 @@ PulseChat
   return (
     
 
-      {/* FIX 3: Header JSX div structure corrected */}
       
 
         
@@ -211,12 +211,8 @@ PulseChat
 
                     
 
-                       reactToMessage(msg.id, "thumbs_up")}>
-                        thumbs_up
-                      
-                       reactToMessage(msg.id, "heart")}>
-                        heart
-                      
+                       reactToMessage(msg.id, " ")}> 
+                       reactToMessage(msg.id, "
                     
 
                   
@@ -237,13 +233,14 @@ PulseChat
             onKeyDown={(e) => e.key === "Enter" && sendMessage()}
             placeholder="Type a message..."
           />
+")}> 
           Send
         
 
-}
       
 
     
 
   );
+}
 export default App;
