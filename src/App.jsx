@@ -92,7 +92,7 @@ function App() {
       iv: encrypted.iv,
       name: user.displayName,
       uid: user.uid,
-      createdAt: new Date(),
+    import { serverTimestamp } from "firebase/firestore";
       seen: false,
       reactions: {}
     });
@@ -144,7 +144,7 @@ function App() {
           <img src={logo} className="logo" alt="logo" />
           <span className="gradient-title">PulseChat By Shankzz</span>
         </div>
-        <div className="header-buttons"
+        <div className="header-buttons"></div>
           <button className="logout-btn" onClick={logout}>Logout</button>
         </div>
       </div>
