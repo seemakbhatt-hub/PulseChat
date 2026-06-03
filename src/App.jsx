@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { auth, provider, db } from "./firebase";
 import { updateProfile } from "firebase/auth";
-import { signInWithPopup, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithPopup, signInWithRedirect, getRedirectResult, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { collection, setDoc, onSnapshot, query, orderBy, where, deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { encryptMessage, decryptMessage } from "./crypto";
 import "./App.css";
@@ -42,14 +42,22 @@ function App() {
     }
   };
 
-  const handleGoogleSignIn = async () => {
-    try {
-      await signInWithPopup(auth, provider);
-    } catch (err) {
-      alert(err.message);
-    }
-  };
-
+const handleGoogleSignIn = async () => {
+  try {
+    await signInWithRedirect(auth, provider);
+  } catch (err) {
+    alert(err.message);
+  }
+};
+useEffect(() => {
+  getRedirectResult(auth).then((result) => {
+    if (result?.user) {
+      // user is already handled by onAuthStateChanged
+    }
+  }).catch((err) => {
+    alert(err.message);
+  });
+}, []);
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (u) => {
       setUser(u);
