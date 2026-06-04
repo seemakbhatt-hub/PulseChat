@@ -263,7 +263,7 @@ function App() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-            placeholder="Type a message..."
+            placeholder="The Floor Is Yours to Type..."
           />
           <button className="gradient-btn" onClick={sendMessage}>Send</button>
         </div>
